@@ -28,3 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
     recipes.innerHTML += html;
 
   };
+
+  // This method is used to remove the recipe from DOM
+  const removeRecipe = (id) => {
+    const recipe = document.querySelector(`.recipe[data-id=${id}]`);
+    recipe.remove();
+  }

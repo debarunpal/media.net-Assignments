@@ -18,7 +18,7 @@ db.collection('recipes').onSnapshot((snapshot) => {
             renderRecipe(change.doc.data(), change.doc.id);
         }
         if (change.type === 'removed') {
-            //To-do
+            removeRecipe(change.doc.id);
         }
     });
 });
@@ -38,3 +38,13 @@ form.addEventListener('submit', e => {
 
     form.reset();
 });
+
+// Delete a Recipe
+const recipeContainer = document.querySelector('.recipes');
+recipeContainer.addEventListener('click', event => {
+    //console.log(event);
+    if (event.target.tagName === 'I'){
+        const id = event.target.getAttribute('data-id');
+        db.collection('recipes').doc(id).delete();
+    }
+})

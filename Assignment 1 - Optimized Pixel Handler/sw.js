@@ -1,5 +1,5 @@
-const staticCacheName = 'static-resources-v3'; // Temporary Workaround; Bad Practice, need to research
-const dynamicCacheName = 'dynamic-resources-v3'; // Temporary Workaround; Bad Practice, need to research
+const staticCacheName = 'static-resources-v6'; // Temporary Workaround; Bad Practice, need to research
+const dynamicCacheName = 'dynamic-resources-v7'; // Temporary Workaround; Bad Practice, need to research
 const assets = [
     '/',
     '/index.html',
