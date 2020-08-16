@@ -19,8 +19,9 @@ self.addEventListener('install', event => {
     // console.log('Service Worker has been successfully installed!');
     // Wait for the Async Operation to complete. Cache Everything.
     event.waitUntil(
-        caches.keys().then(keys => {
-            console.log(keys);
+        caches.open(staticCacheName).then(cache => {
+            console.log('Caching Shell Assets Done!');
+            cache.addAll(assets);
         })
     );
 });
@@ -29,9 +30,15 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
     // console.log('Service Worker has been successfully activated!');
     event.waitUntil(
-        caches.open(staticCacheName).then(cache => {
-            console.log('Caching Shell Assets Done!');
-            cache.addAll(assets);
+        caches.keys().then(keys => {
+            // console.log(keys);
+            /**Pass in a array of promises and delete each and every previous version of caches except our top main one.
+             * Returns a single resolved promise
+            **/
+            return Promise.all(keys
+                .filter(key => key !== staticCacheName)
+                .map(key => caches.delete(key))
+            )
         })
     );
 });
