@@ -12,7 +12,8 @@ const assets = [
     '/img/chicken-biryani-recipe.jpg',
     '/img/fish-curry.jpg',
     'https://fonts.googleapis.com/icon?family=Material+Icons',
-    'https://fonts.gstatic.com/s/materialicons/v54/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
+    'https://fonts.gstatic.com/s/materialicons/v54/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
+    '/pages/fallback.html'
 ];
 
 // Install Service Worker
@@ -37,7 +38,7 @@ self.addEventListener('activate', event => {
              * Returns a single resolved promise
             **/
             return Promise.all(keys
-                .filter(key => key !== staticCacheName)
+                .filter(key => key !== staticCacheName && key !== dynamicCacheName)
                 .map(key => caches.delete(key))
             )
         })
@@ -58,6 +59,6 @@ self.addEventListener('fetch', event => {
                     return fetchResp;
                 })
             });
-        })
+        }).catch(() => caches.match('/pages/fallback.html'))
     );
 });
