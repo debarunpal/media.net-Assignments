@@ -97,7 +97,30 @@
         </form>
     </div>
     
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCVh7nJdN_ZdeheIeujLdIkrXnSGdsB184",
+            authDomain: "mediadotnet-assignment-1.firebaseapp.com",
+            databaseURL: "https://mediadotnet-assignment-1.firebaseio.com",
+            projectId: "mediadotnet-assignment-1",
+            storageBucket: "mediadotnet-assignment-1.appspot.com",
+            messagingSenderId: "636494521454",
+            appId: "1:636494521454:web:df02de452a4352ab3d727f",
+            measurementId: "G-729RD6ESH9"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+        const db = firebase.firestore();
+    </script>
     <script src="/js/app.js"></script>
+    <script src="/js/db.js"></script>
     <script src="/js/utils.js"></script>
 </body>
 </html>
