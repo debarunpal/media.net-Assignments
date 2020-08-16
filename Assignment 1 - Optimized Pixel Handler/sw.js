@@ -1,4 +1,5 @@
 const staticCacheName = 'static-resources-v1'; // Temporary Workaround; Bad Practice, need to research
+const dynamicCacheName = 'dynamic-resources-v1'; // Temporary Workaround; Bad Practice, need to research
 const assets = [
     '/',
     '/index.html',
@@ -47,8 +48,16 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     // console.log('Fetch Event Kickstarted', event)
     event.respondWith(
+        // Check if assets are already cached otherwise reach out to the server
         caches.match(event.request).then(cacheResp => {
-            return cacheResp || fetch(event.request);
+            return cacheResp || fetch(event.request).then(fetchResp => {
+                // Start caching dynamic contents
+                return caches.open(dynamicCacheName).then(cache => {
+                    // We cannot return back the response object directly to the application, so we need to clone the object and then return the original resource.
+                    cache.put(event.request.url, fetchResp.clone());
+                    return fetchResp;
+                })
+            });
         })
     );
 });
