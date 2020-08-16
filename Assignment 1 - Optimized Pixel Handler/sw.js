@@ -16,6 +16,19 @@ const assets = [
     '/pages/fallback.html'
 ];
 
+/**
+ * Function to Limit Cache Size
+ */
+const limitCacheSize = (name, size) => {
+    caches.open(name).then(cache => {
+        cache.keys().then(keys => {
+            if(keys.length > size) {
+                cache.delete(keys[0]).then(limitCacheSize(name, size));
+            }
+        })
+    })
+};
+
 // Install Service Worker
 self.addEventListener('install', event => {
     // console.log('Service Worker has been successfully installed!');
@@ -56,9 +69,14 @@ self.addEventListener('fetch', event => {
                 return caches.open(dynamicCacheName).then(cache => {
                     // We cannot return back the response object directly to the application, so we need to clone the object and then return the original resource.
                     cache.put(event.request.url, fetchResp.clone());
+                    limitCacheSize(dynamicCacheName, 10);
                     return fetchResp;
                 })
             });
-        }).catch(() => caches.match('/pages/fallback.html'))
+        }).catch(() => {
+            if(event.request.url.indexOf('.html') > -1) {
+                return caches.match('/pages/fallback.html');
+            }
+        })
     );
 });
