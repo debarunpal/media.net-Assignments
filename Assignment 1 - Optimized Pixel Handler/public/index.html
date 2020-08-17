@@ -43,9 +43,14 @@
     </div>
 
     <div class="center">
-        <a class="btn-floating btn-small btn-large add-btn sidenav-trigger" data-target="side-form">
+        <a class="btn-floating btn-small btn-large add-btn sidenav-trigger" data-target="side-form" onclick="captureButton(0);">
             <i class="material-icons">add</i>
         </a>
+    </div>
+
+    <!-- pixel tracker -->
+    <div class="responses container grey-text text-darken-1">
+        <h6 class="center">Pixel Tracker</h3>
     </div>
 
     <!-- add recipe side nav -->
@@ -62,7 +67,7 @@
             <label for="ingredients">Ingredients</label>
         </div>
         <div class="input-field center">
-            <button class="btn-small">Add</button>
+            <button class="btn-small" onclick="captureButton(1);">Add</button>
         </div>
         </form>
     </div>

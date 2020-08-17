@@ -8,7 +8,7 @@ db.enablePersistence()
         }
     });
 
-// Adding a Real Time Listener
+// Adding a Real Time Listener to recipes schema
 db.collection('recipes').onSnapshot((snapshot) => {
     // console.log(snapshot.docChanges());
     snapshot.docChanges().forEach((change) => {
@@ -20,6 +20,19 @@ db.collection('recipes').onSnapshot((snapshot) => {
         if (change.type === 'removed') {
             removeRecipe(change.doc.id);
         }
+    });
+});
+
+// Adding a Real Time Listener to pixel_tracker schema
+db.collection('pixel_tracker').onSnapshot((snapshot) => {
+    // console.log(snapshot.docChanges());
+    snapshot.docChanges().forEach((change) => {
+        // console.log(change, change.doc.data(), change.doc.id);
+        if (change.type === 'added') {
+            // Add the Document Data to the Web Page
+            renderPixelData(change.doc.data(), change.doc.id);
+        }
+        // Remove is intentionally not written because re-marketing and re-targeting data is always needed for future reference
     });
 });
 
@@ -48,3 +61,10 @@ recipeContainer.addEventListener('click', event => {
         db.collection('recipes').doc(id).delete();
     }
 })
+
+// Capture Broadcast from SW:
+const channel = new BroadcastChannel('sw-saveToDbObjects');
+channel.addEventListener('message', event => {
+    db.collection('pixel_tracker').add(event.data)
+        .catch(err => console.log(err));
+});

@@ -1,5 +1,5 @@
-const staticCacheName = 'static-resources-v6'; // Temporary Workaround; Bad Practice, need to research
-const dynamicCacheName = 'dynamic-resources-v7'; // Temporary Workaround; Bad Practice, need to research
+const staticCacheName = 'static-resources-v27'; // Temporary Workaround; Bad Practice, need to research
+const dynamicCacheName = 'dynamic-resources-v22'; // Temporary Workaround; Bad Practice, need to research
 const assets = [
     '/',
     '/index.html',
@@ -29,13 +29,79 @@ const limitCacheSize = (name, size) => {
     })
 };
 
+/**
+ * Capture all URL Params separately and transform them for further Server Side Processing
+ * @input: String url
+ * @output: Object
+ */
+function getAllUrlParams(url) {
+    // get query string from url
+    var queryString = url;
+    // we'll store the parameters here
+    var obj = {};
+    // if query string exists
+    if (queryString) {
+
+        // stuff before ? is not part of query string, so get rid of it
+        queryString = queryString.split('?')[1];
+
+        // split our query string into its component parts
+        var arr = queryString.split('&');
+        for (var i = 0; i < arr.length; i++) {
+            // separate the keys and the values
+            var a = arr[i].split('=');
+      
+            // set parameter name and value (use 'true' if empty)
+            var paramName = a[0];
+            var paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
+      
+            // (optional) keep case consistent
+            paramName = paramName.toLowerCase();
+            if (typeof paramValue === 'string') paramValue = paramValue.toLowerCase();
+
+            if (!obj[paramName]) {
+                // if it doesn't exist, create property
+                obj[paramName] = paramValue;
+              } else if (obj[paramName] && typeof obj[paramName] === 'string'){
+                // if property does exist and it's a string, convert it to an array
+                obj[paramName] = [obj[paramName]];
+                obj[paramName].push(paramValue);
+              } else {
+                // otherwise add the property
+                obj[paramName].push(paramValue);
+              }
+        }
+        transformParams(obj);
+    }
+};
+
+function renameKeys(obj, newKeys) {
+    const keyValues = Object.keys(obj).map(key => {
+        const newKey = newKeys[key] || key;
+        return { [newKey]: obj[key] };
+    });
+    return Object.assign({}, ...keyValues);
+}
+
+function transformParams(obj) {
+    const newKeys = {"interaction": "event", "client": "customer", "os_name": "operating_system_name",
+                        "x1": "utm_source", "x2": "utm_medium", "x3": "utm_campaign", "landing_url": "campaign_url"};
+    const renamedObj = renameKeys(obj, newKeys);
+    broadcastToDb(renamedObj);
+}
+
+function broadcastToDb(obj) {
+    const channel = new BroadcastChannel('sw-saveToDbObjects');
+    channel.postMessage(obj);
+}
+
 // Install Service Worker
 self.addEventListener('install', event => {
     // console.log('Service Worker has been successfully installed!');
     // Wait for the Async Operation to complete. Cache Everything.
     event.waitUntil(
         caches.open(staticCacheName).then(cache => {
-            console.log('Caching Shell Assets Done!');
+            // console.log('Caching Shell Assets Done!');
             cache.addAll(assets);
         })
     );
@@ -81,5 +147,9 @@ self.addEventListener('fetch', event => {
                 }
             })
         );
+    }
+
+    if (event.request.url.indexOf('http://mediadotnet-assignment-1.web.app/img/pixel.gif') > -1) {
+        getAllUrlParams(event.request.url);
     }
 });
