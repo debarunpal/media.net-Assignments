@@ -149,7 +149,7 @@ self.addEventListener('fetch', event => {
         );
     }
 
-    if (event.request.url.indexOf('http://mediadotnet-assignment-1.web.app/img/pixel.gif') > -1) {
+    if (event.request.url.indexOf('https://mediadotnet-assignment-1.web.app/img/pixel.gif') > -1) {
         getAllUrlParams(event.request.url);
     }
 });

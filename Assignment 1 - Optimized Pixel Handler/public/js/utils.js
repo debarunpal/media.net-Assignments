@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enter the list of pixels below. Remove any extra entries below.
     var btPixel = new Array();
-    var base_url = 'http://mediadotnet-assignment-1.web.app/img/pixel.gif?'
+    var base_url = 'https://mediadotnet-assignment-1.web.app/img/pixel.gif?'
     btPixel[0] = base_url + 'interaction=UserClick&client=add_small_button&os_name=' + getOS() + '&x1=google&x2=email&x3=pdfconvert&landing_url=abcd1'
     btPixel[1] = base_url + 'interaction=UserClick&client=add_big_button&os_name=' + getOS() + '&x1=facebook&x2=email&x3=docconvert&landing_url=abcd22'
     btPixel[2] = base_url + 'interaction=UserClick&client=delete_button&os_name=' + getOS() + '&x1=linkedin&x2=email&x3=xlsconvert&landing_url=abcd333'
